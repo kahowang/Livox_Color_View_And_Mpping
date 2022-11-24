@@ -1,5 +1,16 @@
 # Livox_Color_View-And-Mpping
 
+A module to color the livox frame and color for FASTLIO2 map, inorder to checkout our extrinsicT
+
+<p align='center'>
+    <img src="./pic/FASTLIO-COLOR.gif " alt="drawing" width="400" height ="250"/>
+    <img src="./pic/FASTLIO-COLOR2.gif" alt="drawing" width="400" height =250/>
+</p>
+
+<p align='center'>
+    <img src="./pic/FASTLIO-COLOR3.gif " alt="drawing" width="500" height ="280"/>
+</p>
+
 ## Related worked
 
 1.感谢[luckyluckydadada](https://github.com/luckyluckydadada) 的 [LIVOX_COLOR](https://github.com/luckyluckydadada/LIVOX_COLOR) 工作 ,Livox_Color_View&Mapping 是基于LIVOX_COLOR进行修改的 。
@@ -114,10 +125,13 @@ define Hmax 720						#camera Height
 define Wmax 1280				 #camera width 
 ```
 
+<p align='center'>
+    <img src="./pic/FASTLIO-COLOR-PIC1.png " alt="drawing" width="400" height ="250"/>
+    <img src="./pic/FASTLIO-COLOR-PIC1.png" alt="drawing" width="400" height =250/>
+</p>
+
 ## Acknowledgements
 
  In this project, the baseline is from  [LIVOX_COLOR](https://github.com/luckyluckydadada/LIVOX_COLOR) .
 
  Also thanks [Tomato1107](https://github.com/Tomato1107)    [lovelyyoshino](https://github.com/lovelyyoshino)   [Huang Hongqian](https://github.com/Natsu-Akatsuki)   LeiHe 's great help .
-
-A module to color the livox frame and color for FASTLIO2 map, inorder to checkout our extrinsicT
