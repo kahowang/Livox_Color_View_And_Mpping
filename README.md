@@ -17,7 +17,7 @@ A module to color the livox frame and color for FASTLIO2 map, inorder to checkou
 
 2.视频参考来源[【自制】尝试Livox Mid40与D435i离线跑fastlio2彩色地图](https://www.bilibili.com/video/BV1MG411n7zd/?spm_id_from=333.999.0.0&vd_source=ed6bf57ee5a8e930b7a857e261dac86d)
 
-## Our PlatrForm
+## Our PlatForm
 
 | Lidar       | Camera | Computer    |
 | ----------- | ------ | ----------- |
@@ -29,7 +29,7 @@ A module to color the livox frame and color for FASTLIO2 map, inorder to checkou
 
 **FastLio2_Color_Mapping**：订阅FastLio2 输出的/Odometry信息,进行地图上色。
 
-## Prepare worded
+## Prepare work
 
 **外参标定**：使用 [livox_camera_calib](https://github.com/hku-mars/livox_camera_calib)工具进行 lidar to camera 外参标定
 
@@ -127,8 +127,9 @@ define Wmax 1280				 #camera width
 
 <p align='center'>
     <img src="./pic/FASTLIO-COLOR-PIC1.png " alt="drawing" width="400" height ="250"/>
-    <img src="./pic/FASTLIO-COLOR-PIC1.png" alt="drawing" width="400" height =250/>
+    <img src="./pic/FASTLIO-COLOR-PIC2.png" alt="drawing" width="400" height =250/>
 </p>
+
 
 ## Acknowledgements
 
