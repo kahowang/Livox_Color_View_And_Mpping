@@ -1,0 +1,8 @@
+prefix=/home/lory/livox_color_ws/src/livox_color/build/devel
+
+Name: livox_color
+Description: Description of livox_color
+Version: 0.0.0
+Cflags: -I/home/lory/livox_color_ws/src/livox_color/build/devel/include
+Libs: -L${prefix}/lib 
+Requires: roscpp rospy std_msgs

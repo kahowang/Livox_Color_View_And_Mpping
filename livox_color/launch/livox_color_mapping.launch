@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="rviz" default="true" />
+
+  <rosparam command="load" file="$(find livox_color)/config/livox_color_mapping.yaml" />
+  <node pkg="livox_color" name="livox_color_mapping" type="livox_color_mapping" output="screen"></node>
+</launch>

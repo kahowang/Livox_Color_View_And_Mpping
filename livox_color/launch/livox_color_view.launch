@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="rviz" default="true" />
+
+  <rosparam command="load" file="$(find livox_color)/config/livox_color_view.yaml" />
+  <node pkg="livox_color" name="livox_color_view" type="livox_color_view" output="screen"></node>
+  <group if="$(arg rviz)">
+  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find livox_color)/rvz/color.rviz" /> 
+  </group>
+</launch>
