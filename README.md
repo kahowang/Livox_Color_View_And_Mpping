@@ -48,7 +48,7 @@ A module to color the livox frame and color for FASTLIO2 map, inorder to checkou
 
 ```shell
 cd YOUR_WORKSPACE/src
-git clone https://github.com/kahowang/FAST_LIO_SAM.git
+git clone https://github.com/kahowang/Livox_Color_View_And_Mpping
 cd ..
 catkin_make
 ```
