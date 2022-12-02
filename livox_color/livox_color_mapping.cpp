@@ -12,7 +12,6 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/common/common.h>
-
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
@@ -32,13 +31,13 @@
 
 using namespace std ;
 
-#define Hmax 720
+#define Hmax 1024
 #define Wmax 1280
 #define H Hmax
 #define W Wmax
 
 Eigen::Isometry3d  Twlidar  ;			//  FASTLIO2 订阅当前里程计
-vector<double>       extrinT(12, 0.0);				//  lidar2camera
+vector<double>       extrinT(16, 0.0);				//  lidar2camera
 vector<double>       intrisicT(9, 0.0);				//   camera  intrinT
 vector<double>       ditortion(5, 0.0);				//  畸变系数
 
@@ -112,7 +111,7 @@ void CalibrationData(void)
 	intrisicMat.at<double>(0, 2) = intrisic.at<double>(0, 2) = intrisicT[2];
 	intrisicMat.at<double>(0, 3) = 0.000000e+00;
 	intrisicMat.at<double>(1, 0) = 0.000000e+00;
-	intrisicMat.at<double>(1, 1) = intrisic.at<double>(1, 1) = intrisicT[3];
+	intrisicMat.at<double>(1, 1) = intrisic.at<double>(1, 1) = intrisicT[4];
 	intrisicMat.at<double>(1, 2) = intrisic.at<double>(1, 2) = intrisicT[5];
 	intrisicMat.at<double>(1, 3) = 0.000000e+00;
 	intrisicMat.at<double>(2, 0) = 0.000000e+00;

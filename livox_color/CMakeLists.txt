@@ -72,5 +72,9 @@ include_directories(
 
 add_executable(livox_color_view livox_color_view.cpp)
 target_link_libraries(livox_color_view ${PCL_LIBRARIES}  ${catkin_LIBRARIES}  ${OpenCV_LIBS})
+
 add_executable(livox_color_mapping livox_color_mapping.cpp)
 target_link_libraries(livox_color_mapping ${PCL_LIBRARIES}  ${catkin_LIBRARIES}  ${OpenCV_LIBS})
+
+add_executable(livox_color_mapping_trigger livox_color_mapping_trigger.cpp)
+target_link_libraries(livox_color_mapping_trigger ${PCL_LIBRARIES}  ${catkin_LIBRARIES}  ${OpenCV_LIBS})
