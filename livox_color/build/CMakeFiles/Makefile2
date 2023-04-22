@@ -66,6 +66,7 @@ CMAKE_BINARY_DIR = /home/lory/livox_color_ws/src/livox_color/build
 all: CMakeFiles/livox_color_generate_messages.dir/all
 all: CMakeFiles/livox_color_view.dir/all
 all: CMakeFiles/livox_color_mapping.dir/all
+all: CMakeFiles/livox_color_mapping_trigger.dir/all
 all: gtest/all
 .PHONY : all
 
@@ -172,8 +173,10 @@ clean: CMakeFiles/livox_color_generate_messages_py.dir/clean
 clean: CMakeFiles/livox_color_genpy.dir/clean
 clean: CMakeFiles/livox_color_view.dir/clean
 clean: CMakeFiles/livox_color_mapping.dir/clean
+clean: CMakeFiles/livox_color_mapping_trigger.dir/clean
 clean: CMakeFiles/livox_color_view_autogen.dir/clean
 clean: CMakeFiles/livox_color_mapping_autogen.dir/clean
+clean: CMakeFiles/livox_color_mapping_trigger_autogen.dir/clean
 clean: gtest/clean
 .PHONY : clean
 
@@ -2742,7 +2745,7 @@ CMakeFiles/livox_color_genpy.dir/clean:
 CMakeFiles/livox_color_view.dir/all: CMakeFiles/livox_color_view_autogen.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_view.dir/build.make CMakeFiles/livox_color_view.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_view.dir/build.make CMakeFiles/livox_color_view.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=28,29,30 "Built target livox_color_view"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=32,33,34 "Built target livox_color_view"
 .PHONY : CMakeFiles/livox_color_view.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2788,13 +2791,39 @@ CMakeFiles/livox_color_mapping.dir/clean:
 .PHONY : CMakeFiles/livox_color_mapping.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/livox_color_mapping_trigger.dir
+
+# All Build rule for target.
+CMakeFiles/livox_color_mapping_trigger.dir/all: CMakeFiles/livox_color_mapping_trigger_autogen.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=28,29,30 "Built target livox_color_mapping_trigger"
+.PHONY : CMakeFiles/livox_color_mapping_trigger.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/livox_color_mapping_trigger.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/livox_color_mapping_trigger.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles 0
+.PHONY : CMakeFiles/livox_color_mapping_trigger.dir/rule
+
+# Convenience name for target.
+livox_color_mapping_trigger: CMakeFiles/livox_color_mapping_trigger.dir/rule
+.PHONY : livox_color_mapping_trigger
+
+# clean rule for target.
+CMakeFiles/livox_color_mapping_trigger.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/clean
+.PHONY : CMakeFiles/livox_color_mapping_trigger.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/livox_color_view_autogen.dir
 
 # All Build rule for target.
 CMakeFiles/livox_color_view_autogen.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_view_autogen.dir/build.make CMakeFiles/livox_color_view_autogen.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_view_autogen.dir/build.make CMakeFiles/livox_color_view_autogen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=31 "Built target livox_color_view_autogen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=35 "Built target livox_color_view_autogen"
 .PHONY : CMakeFiles/livox_color_view_autogen.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2838,6 +2867,32 @@ livox_color_mapping_autogen: CMakeFiles/livox_color_mapping_autogen.dir/rule
 CMakeFiles/livox_color_mapping_autogen.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_autogen.dir/build.make CMakeFiles/livox_color_mapping_autogen.dir/clean
 .PHONY : CMakeFiles/livox_color_mapping_autogen.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/livox_color_mapping_trigger_autogen.dir
+
+# All Build rule for target.
+CMakeFiles/livox_color_mapping_trigger_autogen.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger_autogen.dir/build.make CMakeFiles/livox_color_mapping_trigger_autogen.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger_autogen.dir/build.make CMakeFiles/livox_color_mapping_trigger_autogen.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles --progress-num=31 "Built target livox_color_mapping_trigger_autogen"
+.PHONY : CMakeFiles/livox_color_mapping_trigger_autogen.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/livox_color_mapping_trigger_autogen.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles 1
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/livox_color_mapping_trigger_autogen.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles 0
+.PHONY : CMakeFiles/livox_color_mapping_trigger_autogen.dir/rule
+
+# Convenience name for target.
+livox_color_mapping_trigger_autogen: CMakeFiles/livox_color_mapping_trigger_autogen.dir/rule
+.PHONY : livox_color_mapping_trigger_autogen
+
+# clean rule for target.
+CMakeFiles/livox_color_mapping_trigger_autogen.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger_autogen.dir/build.make CMakeFiles/livox_color_mapping_trigger_autogen.dir/clean
+.PHONY : CMakeFiles/livox_color_mapping_trigger_autogen.dir/clean
 
 #=============================================================================
 # Target rules for target gtest/googlemock/CMakeFiles/gmock.dir

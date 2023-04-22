@@ -1,8 +1,0 @@
-prefix=/home/lory/r3live_ws/src/livox_ros_driver/build/devel
-
-Name: livox_ros_driver
-Description: Description of livox_ros_driver
-Version: 2.0.0
-Cflags: -I/home/lory/r3live_ws/src/livox_ros_driver/build/devel/include
-Libs: -L${prefix}/lib 
-Requires: roscpp rospy std_msgs message_runtime pcl_ros

@@ -190,12 +190,12 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg)
 	try
 	{
 		cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image; //image_raw就是我们得到的图像了
-				// 去畸变，可选
-		// cv::Mat map1, map2;
-		// cv::Size imageSize = image.size();		
-		// cv::initUndistortRectifyMap(intrisic, distCoeffs, cv::Mat(), cv::getOptimalNewCameraMatrix(intrisic, distCoeffs, imageSize, 1, imageSize, 0), imageSize, CV_16SC2, map1, map2);
-		// cv::remap(image, image, map1, map2, cv::INTER_LINEAR); // correct the distortion
-		// cv::imwrite("1.bmp",image);
+		// 去畸变，可选
+        cv::Mat map1, map2;
+		cv::Size imageSize = image.size();		
+		cv::initUndistortRectifyMap(intrisic, distCoeffs, cv::Mat(), cv::getOptimalNewCameraMatrix(intrisic, distCoeffs, imageSize, 1, imageSize, 0), imageSize, CV_16SC2, map1, map2);
+		cv::remap(image, image, map1, map2, cv::INTER_LINEAR); // correct the distortion
+        // cv::imwrite("/home/lory/1.bmp",image);				//   保存看畸变矫正后的结果
 		for (int row = 0; row < H; row++)
 		{
 			for (int col = 0; col < W; col++)

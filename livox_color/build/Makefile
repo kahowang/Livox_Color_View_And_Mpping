@@ -1446,6 +1446,19 @@ livox_color_mapping/fast:
 .PHONY : livox_color_mapping/fast
 
 #=============================================================================
+# Target rules for targets named livox_color_mapping_trigger
+
+# Build rule for target.
+livox_color_mapping_trigger: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 livox_color_mapping_trigger
+.PHONY : livox_color_mapping_trigger
+
+# fast build rule for target.
+livox_color_mapping_trigger/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/build
+.PHONY : livox_color_mapping_trigger/fast
+
+#=============================================================================
 # Target rules for targets named livox_color_view_autogen
 
 # Build rule for target.
@@ -1470,6 +1483,19 @@ livox_color_mapping_autogen: cmake_check_build_system
 livox_color_mapping_autogen/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_autogen.dir/build.make CMakeFiles/livox_color_mapping_autogen.dir/build
 .PHONY : livox_color_mapping_autogen/fast
+
+#=============================================================================
+# Target rules for targets named livox_color_mapping_trigger_autogen
+
+# Build rule for target.
+livox_color_mapping_trigger_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 livox_color_mapping_trigger_autogen
+.PHONY : livox_color_mapping_trigger_autogen
+
+# fast build rule for target.
+livox_color_mapping_trigger_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger_autogen.dir/build.make CMakeFiles/livox_color_mapping_trigger_autogen.dir/build
+.PHONY : livox_color_mapping_trigger_autogen/fast
 
 #=============================================================================
 # Target rules for targets named gmock
@@ -1570,6 +1596,54 @@ livox_color_mapping_autogen/mocs_compilation.s: livox_color_mapping_autogen/mocs
 livox_color_mapping_autogen/mocs_compilation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping.dir/build.make CMakeFiles/livox_color_mapping.dir/livox_color_mapping_autogen/mocs_compilation.cpp.s
 .PHONY : livox_color_mapping_autogen/mocs_compilation.cpp.s
+
+livox_color_mapping_trigger.o: livox_color_mapping_trigger.cpp.o
+.PHONY : livox_color_mapping_trigger.o
+
+# target to build an object file
+livox_color_mapping_trigger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger.cpp.o
+.PHONY : livox_color_mapping_trigger.cpp.o
+
+livox_color_mapping_trigger.i: livox_color_mapping_trigger.cpp.i
+.PHONY : livox_color_mapping_trigger.i
+
+# target to preprocess a source file
+livox_color_mapping_trigger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger.cpp.i
+.PHONY : livox_color_mapping_trigger.cpp.i
+
+livox_color_mapping_trigger.s: livox_color_mapping_trigger.cpp.s
+.PHONY : livox_color_mapping_trigger.s
+
+# target to generate assembly for a file
+livox_color_mapping_trigger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger.cpp.s
+.PHONY : livox_color_mapping_trigger.cpp.s
+
+livox_color_mapping_trigger_autogen/mocs_compilation.o: livox_color_mapping_trigger_autogen/mocs_compilation.cpp.o
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.o
+
+# target to build an object file
+livox_color_mapping_trigger_autogen/mocs_compilation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger_autogen/mocs_compilation.cpp.o
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.cpp.o
+
+livox_color_mapping_trigger_autogen/mocs_compilation.i: livox_color_mapping_trigger_autogen/mocs_compilation.cpp.i
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.i
+
+# target to preprocess a source file
+livox_color_mapping_trigger_autogen/mocs_compilation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger_autogen/mocs_compilation.cpp.i
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.cpp.i
+
+livox_color_mapping_trigger_autogen/mocs_compilation.s: livox_color_mapping_trigger_autogen/mocs_compilation.cpp.s
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.s
+
+# target to generate assembly for a file
+livox_color_mapping_trigger_autogen/mocs_compilation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/livox_color_mapping_trigger.dir/build.make CMakeFiles/livox_color_mapping_trigger.dir/livox_color_mapping_trigger_autogen/mocs_compilation.cpp.s
+.PHONY : livox_color_mapping_trigger_autogen/mocs_compilation.cpp.s
 
 livox_color_view.o: livox_color_view.cpp.o
 .PHONY : livox_color_view.o
@@ -1675,6 +1749,7 @@ help:
 	@echo "... livox_color_gennodejs"
 	@echo "... livox_color_genpy"
 	@echo "... livox_color_mapping_autogen"
+	@echo "... livox_color_mapping_trigger_autogen"
 	@echo "... livox_color_view_autogen"
 	@echo "... nodelet_generate_messages_cpp"
 	@echo "... nodelet_generate_messages_eus"
@@ -1735,6 +1810,7 @@ help:
 	@echo "... gtest"
 	@echo "... gtest_main"
 	@echo "... livox_color_mapping"
+	@echo "... livox_color_mapping_trigger"
 	@echo "... livox_color_view"
 	@echo "... livox_color_mapping.o"
 	@echo "... livox_color_mapping.i"
@@ -1742,6 +1818,12 @@ help:
 	@echo "... livox_color_mapping_autogen/mocs_compilation.o"
 	@echo "... livox_color_mapping_autogen/mocs_compilation.i"
 	@echo "... livox_color_mapping_autogen/mocs_compilation.s"
+	@echo "... livox_color_mapping_trigger.o"
+	@echo "... livox_color_mapping_trigger.i"
+	@echo "... livox_color_mapping_trigger.s"
+	@echo "... livox_color_mapping_trigger_autogen/mocs_compilation.o"
+	@echo "... livox_color_mapping_trigger_autogen/mocs_compilation.i"
+	@echo "... livox_color_mapping_trigger_autogen/mocs_compilation.s"
 	@echo "... livox_color_view.o"
 	@echo "... livox_color_view.i"
 	@echo "... livox_color_view.s"

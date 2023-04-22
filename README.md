@@ -1,6 +1,6 @@
 # Livox_Color_View-And-Mpping
 
-A module to color the livox frame and color for FASTLIO2 map, inorder to checkout our extrinsicT
+A module to realtime color the livox frame and color for FASTLIO2 map, inorder to checkout our extrinsicT
 
 <p align='center'>
     <img src="./pic/FASTLIO-COLOR.gif " alt="drawing" width="400" height ="250"/>
@@ -22,6 +22,8 @@ A module to color the livox frame and color for FASTLIO2 map, inorder to checkou
 | Lidar       | Camera | Computer    |
 | ----------- | ------ | ----------- |
 | Livox mid70 | D435i  | Intel NUC11 |
+
+<img src="https://kaho-pic-1307106074.cos.ap-guangzhou.myqcloud.com/academic_website_pic/lane_vectorization%20/%E6%89%8B%E6%8C%81%E9%9B%B7%E8%BE%BE.gif" style="zoom:50%;" />
 
 ## Contributions
 
@@ -129,8 +131,6 @@ define Wmax 1280				 #camera width
     <img src="./pic/FASTLIO-COLOR-PIC1.png " alt="drawing" width="400" height ="250"/>
     <img src="./pic/FASTLIO-COLOR-PIC2.png" alt="drawing" width="400" height =250/>
 </p>
-
-
 ## Acknowledgements
 
  In this project, the baseline is from  [LIVOX_COLOR](https://github.com/luckyluckydadada/LIVOX_COLOR) .

@@ -96,6 +96,7 @@
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_genpy.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_view.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_mapping.dir
+/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_mapping_trigger.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/test.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/edit_cache.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/rebuild_cache.dir
@@ -105,6 +106,7 @@
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/install/strip.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_view_autogen.dir
 /home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_mapping_autogen.dir
+/home/lory/livox_color_ws/src/livox_color/build/CMakeFiles/livox_color_mapping_trigger_autogen.dir
 /home/lory/livox_color_ws/src/livox_color/build/gtest/CMakeFiles/test.dir
 /home/lory/livox_color_ws/src/livox_color/build/gtest/CMakeFiles/edit_cache.dir
 /home/lory/livox_color_ws/src/livox_color/build/gtest/CMakeFiles/rebuild_cache.dir
