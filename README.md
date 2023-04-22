@@ -23,7 +23,9 @@ A module to realtime color the livox frame and color for FASTLIO2 map, inorder t
 | ----------- | ------ | ----------- |
 | Livox mid70 | D435i  | Intel NUC11 |
 
-<img src="https://kaho-pic-1307106074.cos.ap-guangzhou.myqcloud.com/academic_website_pic/lane_vectorization%20/%E6%89%8B%E6%8C%81%E9%9B%B7%E8%BE%BE.gif" style="zoom:50%;" />
+<p align='center'>
+    <img src="./pic/handle.gif " alt="drawing" width="450" height ="250"/>
+</p>
 
 ## Contributions
 
