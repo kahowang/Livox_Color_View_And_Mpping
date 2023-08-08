@@ -3,7 +3,7 @@
   <arg name="rviz" default="true" />
 
   <rosparam command="load" file="$(find livox_color)/config/livox_color_mapping.yaml" />
-  <node pkg="livox_color" name="livox_color_mapping" type="livox_color_mapping" output="screen"></node>
+  <node pkg="livox_color" name="livox_color_mapping_trigger" type="livox_color_mapping_trigger" output="screen"></node>
   <group if="$(arg rviz)">
     <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find livox_color)/rvz/color_mapping.rviz" />
   </group>

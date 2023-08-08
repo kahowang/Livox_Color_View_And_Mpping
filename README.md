@@ -10,6 +10,21 @@ A module to realtime color the livox frame and color for FASTLIO2 map, inorder t
 <p align='center'>
     <img src="./pic/FASTLIO-COLOR3.gif " alt="drawing" width="500" height ="280"/>
 </p>
+## Update Lists
+
+```shell
+# Verson 2023.3
+	提交 livox_view   livox_mapping 模块，用于  快速验证camera-livox外参  &  基于FASTLIO2的上色
+# Verson 2023.8
+    1.修正 livox_mapping 模块  2. 幷提交livox_trigger 模块  3.内参修正
+    具体更改： livox_mapping  & livox_trigger 模块增加了时间软同步，避免之前因为camera与lidar没有数据同步，有较大时间差距，导致无法上色的问题。	两模块的时间软同步区别在于，livox_mapping使用的是ros自带的时间对齐缓冲器，livox_trigger 使用的自己写的逻辑时间软同步器。
+    // livox_mapping  ROS 自带缓冲器
+    sync_.reset(new Sync(MySyncPolicy(100), path_sub_, points_sub_, image_sub_));			//  时间软同步最大容忍时间为100ms
+    sync_->registerCallback(boost::bind(&DataCallback,  _1, _2, _3));
+
+    //  livox_trigger  时间软同步器
+    if(lidar_buff_.size() == 0 || image_buff_.size() == 0 || odom_buff_.size() == 0) return false ;
+```
 
 ## Related worked
 
@@ -58,6 +73,10 @@ catkin_make
 ```
 
 ## Quick test
+
+
+
+## Quick start
 
 ### 1.Livox_Color_View
 
@@ -116,7 +135,7 @@ mapping:
                             0.0,  0.0,  0.0,  1]        #  lidar2camera 外参  From livox_camera_calib
 
     intrisicT: [ 913.197692871094, 0, 648.626220703125,
-                         913.52783203125, 0, 358.518096923828,
+                         0, 913.52783203125, 358.518096923828,
                          0, 0, 1]           # camera 内参
 
     ditortion: [0, 0, 0, 0, 0]      # camera 畸变系数

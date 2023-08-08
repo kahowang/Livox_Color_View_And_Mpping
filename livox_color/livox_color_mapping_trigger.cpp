@@ -37,7 +37,7 @@
 
 using namespace std ;
 
-#define Hmax 1024
+#define Hmax 720
 #define Wmax 1280
 #define H Hmax
 #define W Wmax
@@ -63,7 +63,8 @@ string  lidar_topic, lidar_color_topic, camera_topic, odom_topic, frame_id ;
 
 /*ROS  NODE*/
 ros::Subscriber subOdom ;   // 订阅FASTLIO2里程计
-image_transport::Subscriber subImage ;   // 订阅图像
+ros::Subscriber subImage ;
+//image_transport::Subscriber subImage ;   // 订阅图像
 ros::Subscriber subCloud ;  // 订阅点云
 ros::Publisher pubCloud ;   // 发布彩色点云
 
@@ -181,6 +182,12 @@ void ColorPointcloud()
     try
     {
         cv::Mat image = cv_bridge::toCvShare(ImageMsg, "bgr8")->image; //image_raw就是我们得到的图像了
+        // 去畸变，可选
+        cv::Mat map1, map2;
+        cv::Size imageSize = image.size();
+        cv::initUndistortRectifyMap(intrisic, distCoeffs, cv::Mat(), cv::getOptimalNewCameraMatrix(intrisic, distCoeffs, imageSize, 1, imageSize, 0), imageSize, CV_16SC2, map1, map2);
+        cv::remap(image, image, map1, map2, cv::INTER_LINEAR); // correct the distortion
+        // cv::imwrite("/home/lory/1.bmp",image);				//   保存看畸变矫正后的结果
         for (int row = 0; row < H; row++)
         {
             for (int col = 0; col < W; col++)
@@ -326,8 +333,8 @@ bool OdomSyncData(std::deque<nav_msgs::Odometry::ConstPtr> &UnsyncedData,std::de
 bool SyncData()
 {
 	if(lidar_buff_.size() == 0) return false ;
-    if(unsyced_image_.size() == 0) return false ;
-    if(unsyced_odom_.size() == 0) return false ;
+  if(unsyced_image_.size() == 0) return false ;
+  if(unsyced_odom_.size() == 0) return false ;
 	// use timestamp of lidar measurement as reference:
     double cloud_time = lidar_buff_.front()->header.stamp.toSec();
     bool vaild_image = ImageSyncData(unsyced_image_, image_buff_, cloud_time);
@@ -341,6 +348,7 @@ bool SyncData()
         }
         sensor_inited = true;
     }
+    if(lidar_buff_.size() == 0 || image_buff_.size() == 0 || odom_buff_.size() == 0) return false ;
 
     return true ;
 }
@@ -367,10 +375,10 @@ int main(int argc, char **argv)
 	image_transport::ImageTransport it(n);
 	Twlidar = Eigen::Matrix4d::Identity() ;				//  初始化T为单位阵，如果没有SLAM的里程计输出，默认是固定在lidar系下 
 	subOdom = n.subscribe(odom_topic, 1000, &OdomCallback);			// 订阅FASTLIO2 的里程计输出
-	subImage = it.subscribe(camera_topic, 1000, &imageCallback);   // 订阅图像
-    subCloud = n.subscribe<sensor_msgs::PointCloud2>(lidar_topic, 1000, &pointCloudCallback);
-    pubCloud = n.advertise<sensor_msgs::PointCloud2>(lidar_color_topic, 1);
-    srvSaveMap  = n.advertiseService("/save_map" ,  &saveMapService);   	    // saveMap  发布地图保存服务
+  image_transport::Subscriber subImage = it.subscribe(camera_topic, 1000, &imageCallback); // 订阅图像
+  subCloud = n.subscribe<sensor_msgs::PointCloud2>(lidar_topic, 1000, &pointCloudCallback);
+  pubCloud = n.advertise<sensor_msgs::PointCloud2>(lidar_color_topic, 1);
+  srvSaveMap  = n.advertiseService("/save_map" ,  &saveMapService);   	    // saveMap  发布地图保存服务
 	ros::Rate loop_rate(500);
 
 	while (ros::ok())

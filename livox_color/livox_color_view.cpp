@@ -28,7 +28,7 @@
 
 using namespace std ;
 
-#define Hmax 1024
+#define Hmax 720
 #define Wmax 1280
 #define H Hmax
 #define W Wmax

@@ -22,6 +22,11 @@
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_listener.h>
 
+//  ROS 自带时间同步器
+#include <message_filters/subscriber.h>
+#include <message_filters/time_synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
@@ -31,10 +36,16 @@
 
 using namespace std ;
 
-#define Hmax 1024
+#define Hmax 720
 #define Wmax 1280
 #define H Hmax
 #define W Wmax
+
+typedef message_filters::sync_policies::ApproximateTime<nav_msgs::Odometry, sensor_msgs::PointCloud2, sensor_msgs::Image > MySyncPolicy;   
+typedef message_filters::Synchronizer<MySyncPolicy> Sync;
+boost::shared_ptr<Sync> sync_;
+
+ros::Publisher pubCloud ;  
 
 Eigen::Isometry3d  Twlidar  ;			//  FASTLIO2 订阅当前里程计
 vector<double>       extrinT(16, 0.0);				//  lidar2camera
@@ -125,77 +136,29 @@ void CalibrationData(void)
 	distCoeffs.at<double>(4) = ditortion[4];
 }
 
-class livox_lidar_color
+
+//点云回调函数
+void DataCallback(const nav_msgs::OdometryConstPtr &path_msg, const sensor_msgs::PointCloud2ConstPtr &points_msg,const sensor_msgs::ImageConstPtr &image_msg)
 {
-public:
-	ros::NodeHandle n;
-	sensor_msgs::PointCloud2 msg;																									   //接收到的点云消息
-	sensor_msgs::PointCloud2 fusion_msg;																							   //等待发送的点云消息
-	ros::Subscriber subCloud = n.subscribe<sensor_msgs::PointCloud2>(lidar_topic, 1, &livox_lidar_color::pointCloudCallback, this); //接收点云数据，进入回调函数pointCloudCallback
-	ros::Publisher pubCloud = n.advertise<sensor_msgs::PointCloud2>(lidar_color_topic, 1);										   //建立了一个发布器，方便之后发布加入颜色之后的点云
+	//  ROS_ERROR("data callback %lf %lf", path_msg->header.stamp.toSec(), (double)points_msg->header.stamp.toSec());
+	ROS_INFO_ONCE("data callback %lf %lf %lf", path_msg->header.stamp.toSec(), (double)points_msg->header.stamp.toSec(), (double)image_msg->header.stamp.toSec());
 
-private:
-	//点云回调函数
-	void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
-	{
-		pcl::PointCloud<pcl::PointXYZI>::Ptr raw_pcl_ptr(new pcl::PointCloud<pcl::PointXYZI>); //livox点云消息包含xyz和intensity
-		pcl::fromROSMsg(*laserCloudMsg, *raw_pcl_ptr);										   //把msg消息指针转化为PCL点云
-		cv::Mat X(4, 1, cv::DataType<double>::type);
-		cv::Mat Y(3, 1, cv::DataType<double>::type);
-
-		pcl::PointCloud<PointType>::Ptr fusion_pcl_ptr(new pcl::PointCloud<PointType>); //放在这里是因为，每次都需要重新初始化
-
-		for (int i = 0; i < raw_pcl_ptr->points.size(); i++)
-		{
-			Eigen::Vector3d x_w(raw_pcl_ptr->points[i].x, raw_pcl_ptr->points[i].y, raw_pcl_ptr->points[i].z);
-			Eigen::Vector3d x_lidar =  Twlidar.inverse()  *  x_w   ;
-			X.at<double>(0, 0) = x_lidar.x();
-			X.at<double>(1, 0) = x_lidar.y();
-			X.at<double>(2, 0) = x_lidar.z();
-			X.at<double>(3, 0) = 1;			
-			Y = intrisicMat * extrinsicMat_RT * X; //雷达坐标转换到相机坐标，相机坐标投影到像素坐标
-			cv::Point pt;						   // (x,y) 像素坐标
-			// Y是3*1向量，pt.x是Y的第一个值除以第三个值，pt.y是Y的第二个值除以第三个值，为什么是下面这种写法？？
-			pt.x = Y.at<double>(0, 0) / Y.at<double>(2, 0);
-			pt.y = Y.at<double>(1, 0) / Y.at<double>(2, 0);
-			if (pt.x >= 0 && pt.x < W && pt.y >= 0 && pt.y < H && x_lidar.x() > 0) //&& raw_pcl_ptr->points[i].x>0去掉图像后方的点云
-			{
-				PointType p;
-				p.x = raw_pcl_ptr->points[i].x;
-				p.y = raw_pcl_ptr->points[i].y;
-				p.z = raw_pcl_ptr->points[i].z;
-				//点云颜色由图像上对应点确定
-				p.b = image_color[pt.y][pt.x][0];
-				p.g = image_color[pt.y][pt.x][1];
-				p.r = image_color[pt.y][pt.x][2];
-				p.intensity = raw_pcl_ptr->points[i].intensity; //继承之前点云的intensity
-				fusion_pcl_ptr->points.push_back(p);
-			}
-		}
-
-		fusion_pcl_ptr->width = fusion_pcl_ptr->points.size();
-		fusion_pcl_ptr->height = 1;
-		// std::cout<<  fusion_pcl_ptr->points.size() << std::endl;
-		pcl::toROSMsg(*fusion_pcl_ptr, fusion_msg);			   //将点云转化为消息才能发布
-		fusion_msg.header.frame_id = frame_id ;			   //   Fastlio2 中 frame-id 为 camera_init
-		fusion_msg.header.stamp = laserCloudMsg->header.stamp; // 时间戳和/livox/lidar 一致
-		pubCloud.publish(fusion_msg);						   //发布调整之后的点云数据
-
-		mapCloudKeyFrames.push_back(fusion_pcl_ptr);		// 存储历史帧点云
-	}
-};
-
-void imageCallback(const sensor_msgs::ImageConstPtr &msg)
-{
+	//step1 :  处理odom
+	Eigen::Vector3d t_w_lidar(path_msg->pose.pose.position.x, path_msg->pose.pose.position.y, path_msg->pose.pose.position.z);	 //    当前载体在世界系下的位置
+	Eigen::Quaterniond q_w_lidar(path_msg->pose.pose.orientation.w, path_msg->pose.pose.orientation.x, path_msg->pose.pose.orientation.y, path_msg->pose.pose.orientation.z);   //    当前载体在世界系下的姿态
+	q_w_lidar.normalize();
+	Eigen::Isometry3d T_w_lidar(q_w_lidar);
+	T_w_lidar.pretranslate(t_w_lidar); 
+	Twlidar = T_w_lidar ;
+	//step2 :  处理image
 	try
 	{
-		cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image; //image_raw就是我们得到的图像了
-		// 去畸变，可选
-        cv::Mat map1, map2;
+		cv::Mat image = cv_bridge::toCvShare(image_msg, "bgr8")->image; //image_raw就是我们得到的图像了
+		cv::Mat map1, map2;					// 去畸变，可选
 		cv::Size imageSize = image.size();		
 		cv::initUndistortRectifyMap(intrisic, distCoeffs, cv::Mat(), cv::getOptimalNewCameraMatrix(intrisic, distCoeffs, imageSize, 1, imageSize, 0), imageSize, CV_16SC2, map1, map2);
 		cv::remap(image, image, map1, map2, cv::INTER_LINEAR); // correct the distortion
-        // cv::imwrite("/home/lory/1.bmp",image);				//   保存看畸变矫正后的结果
+		// cv::imwrite("/home/lory/1.bmp",image);				//   保存看畸变矫正后的结果
 		for (int row = 0; row < H; row++)
 		{
 			for (int col = 0; col < W; col++)
@@ -206,20 +169,56 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg)
 	}
 	catch (cv_bridge::Exception &e)
 	{
-		ROS_ERROR("Could not conveextrinsicMat_RT from '%s' to 'bgr8'.", msg->encoding.c_str());
+		ROS_ERROR("Could not conveextrinsicMat_RT from '%s' to 'bgr8'.", image_msg->encoding.c_str());
 	}
-}
+	//step3 :  处理点云
+	pcl::PointCloud<pcl::PointXYZI>::Ptr raw_pcl_ptr(new pcl::PointCloud<pcl::PointXYZI>); //livox点云消息包含xyz和intensity
+	pcl::fromROSMsg(*points_msg, *raw_pcl_ptr);			
 
+	cv::Mat X(4, 1, cv::DataType<double>::type);
+	cv::Mat Y(3, 1, cv::DataType<double>::type);
 
-void OdomCallback(const nav_msgs::Odometry::ConstPtr &msg)
-{ 
-	Eigen::Vector3d t_w_lidar(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);	 //    当前载体在世界系下的位置
-	Eigen::Quaterniond q_w_lidar(msg->pose.pose.orientation.w, msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z);   //    当前载体在世界系下的姿态
-	q_w_lidar.normalize();
-	Eigen::Isometry3d T_w_lidar(q_w_lidar);
-	T_w_lidar.pretranslate(t_w_lidar); 
-	Twlidar = T_w_lidar ;
-    // ROS_INFO("Odom: %f, %f, %f, %f, %f, %f", x, y, z, roll, pitch, yaw);
+	pcl::PointCloud<PointType>::Ptr fusion_pcl_ptr(new pcl::PointCloud<PointType>); //放在这里是因为，每次都需要重新初始化
+
+	for (int i = 0; i < raw_pcl_ptr->points.size(); i++)
+	{
+		Eigen::Vector3d x_w(raw_pcl_ptr->points[i].x, raw_pcl_ptr->points[i].y, raw_pcl_ptr->points[i].z);
+		Eigen::Vector3d x_lidar =  Twlidar.inverse()  *  x_w   ;
+		X.at<double>(0, 0) = x_lidar.x();
+		X.at<double>(1, 0) = x_lidar.y();
+		X.at<double>(2, 0) = x_lidar.z();
+		X.at<double>(3, 0) = 1;			
+		Y = intrisicMat * extrinsicMat_RT * X; //雷达坐标转换到相机坐标，相机坐标投影到像素坐标
+		cv::Point pt;						   // (x,y) 像素坐标
+		// Y是3*1向量，pt.x是Y的第一个值除以第三个值，pt.y是Y的第二个值除以第三个值，为什么是下面这种写法？？
+		pt.x = Y.at<double>(0, 0) / Y.at<double>(2, 0);
+		pt.y = Y.at<double>(1, 0) / Y.at<double>(2, 0);
+		if (pt.x >= 0 && pt.x < W && pt.y >= 0 && pt.y < H && x_lidar.x() > 0) //&& raw_pcl_ptr->points[i].x>0去掉图像后方的点云
+		{
+			PointType p;
+			p.x = raw_pcl_ptr->points[i].x;
+			p.y = raw_pcl_ptr->points[i].y;
+			p.z = raw_pcl_ptr->points[i].z;
+			//点云颜色由图像上对应点确定
+			p.b = image_color[pt.y][pt.x][0];
+			p.g = image_color[pt.y][pt.x][1];
+			p.r = image_color[pt.y][pt.x][2];
+			p.intensity = raw_pcl_ptr->points[i].intensity; //继承之前点云的intensity
+			fusion_pcl_ptr->points.push_back(p);
+		}
+	}
+
+	fusion_pcl_ptr->width = fusion_pcl_ptr->points.size();
+	fusion_pcl_ptr->height = 1;
+	// std::cout<<  fusion_pcl_ptr->points.size() << std::endl;	
+	sensor_msgs::PointCloud2 fusion_msg;		//  彩色点云
+	pcl::toROSMsg(*fusion_pcl_ptr, fusion_msg);			   //将点云转化为消息才能发布
+	fusion_msg.header.frame_id = frame_id ;			   //   Fastlio2 中 frame-id 为 camera_init
+	fusion_msg.header.stamp = points_msg->header.stamp; // 时间戳和/livox/lidar 一致
+
+	pubCloud.publish(fusion_msg);						   //发布调整之后的点云数据
+	
+	mapCloudKeyFrames.push_back(fusion_pcl_ptr);		// 存储历史帧点云
 }
 
 /**
@@ -270,15 +269,24 @@ int main(int argc, char **argv)
 
 	n.param<std::string>("savepcd/savePCDDirectory", savePCDDirectory, "/Downloads/LOAM/");			//  保存地图路径
 
-	livox_lidar_color llc;
-	
 	CalibrationData();
 
-	image_transport::ImageTransport it(n);
 	Twlidar = Eigen::Matrix4d::Identity() ;				//  初始化T为单位阵，如果没有SLAM的里程计输出，默认是固定在lidar系下 
-	ros::Subscriber subOdom = n.subscribe(odom_topic, 1000, &OdomCallback);			// 订阅FASTLIO2 的里程计输出
-	image_transport::Subscriber sub = it.subscribe(camera_topic, 1000, &imageCallback);
-    srvSaveMap  = n.advertiseService("/save_map" ,  &saveMapService);   	    // saveMap  发布地图保存服务
+
+	pubCloud = n.advertise<sensor_msgs::PointCloud2>(lidar_color_topic, 1);			
+
+	message_filters::Subscriber<nav_msgs::Odometry> path_sub_;  
+  message_filters::Subscriber<sensor_msgs::PointCloud2> points_sub_;
+  message_filters::Subscriber<sensor_msgs::Image> image_sub_;
+
+	path_sub_.subscribe(n, odom_topic, 1); 		 //  订阅FASTLIO2 的里程计输出 , queue 为1，维持为最新的数据
+  points_sub_.subscribe(n, lidar_topic, 1);	   //  订阅点云 pointcloud2格式
+  image_sub_.subscribe(n, camera_topic, 1);
+
+	sync_.reset(new Sync(MySyncPolicy(100), path_sub_, points_sub_, image_sub_));			//  时间软同步最大容忍时间为100ms
+  sync_->registerCallback(boost::bind(&DataCallback,  _1, _2, _3));
+
+  srvSaveMap  = n.advertiseService("/save_map" ,  &saveMapService);   	    // saveMap  发布地图保存服务
 	ros::Rate loop_rate(200);
 
 	while (ros::ok())

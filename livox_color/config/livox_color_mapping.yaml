@@ -1,21 +1,21 @@
 common:
-    lidar_topic:  "/cloud_registered"                  # From FASTLIO2
-    lidar_color_topic:  "/livox/color_lidar"      # Pub color pointcloud
-    odom_topic:  "/Odometry"                             # From FASTLIO2
-    camera_topic:  "/camera/color/image_raw"
-    frame_id: "camera_init"                                   # From FASTLIO2 's  frame_link
+  lidar_topic:  "/cloud_registered"                  # From FASTLIO2
+  lidar_color_topic:  "/livox/color_lidar" #"/color_lidar"      # Pub color pointcloud
+  odom_topic:  "/Odometry"                             # From FASTLIO2
+  camera_topic:  "/camera/color/image_raw"
+  frame_id: "camera_init"                                   # From FASTLIO2 's  frame_link
 
 mapping:
-    extrinsicT: [ 0.0144457,  -0.999828,  0.0116559,  -0.115962,
-                            -0.0142691,  -0.0118621,  -0.999828, -0.0215207,
-                            0.999794, 0.0142769,  -0.014438,  -0.0131816,
-                            0.0,  0.0,  0.0,  1]        #  lidar2camera 外参  From livox_camera_calib
+  extrinsicT: [ -0.00372603 ,-0.999916 ,0.0124105 ,0.011315,
+                0.0107715, -0.01245 ,-0.999864 ,0.0319331,
+                0.999935, -0.00359184 ,0.010817, -0.0696713,
+                0.0,  0.0,  0.0,  1]        #  lidar2camera 外参  From livox_camera_calib
 
-    intrisicT: [ 913.197692871094, 0, 648.626220703125,
-                         913.52783203125, 0, 358.518096923828,
-                         0, 0, 1]           # camera 内参
+  intrisicT: [ 645.39697265625 , 0, 627.2928466796875,
+               0, 644.8126220703125, 356.3106689453125,
+               0, 0, 1]           # camera 内参
 
-    ditortion: [0, 0, 0, 0, 0]      # camera 畸变系数
+  ditortion: [-0.055537205189466476 , 0.06588292121887207 , -0.0013024559011682868  ,-0.0010083256056532264,  -0.02116576768457889]      # camera 畸变系数
 
 savepcd:
-    savePCDDirectory: "/livox_color_ws/src/livox_color/PCD/"
+  savePCDDirectory: "/fast_lio/src/livox_color/COLOR_PCD/"
