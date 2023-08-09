@@ -18,4 +18,4 @@ mapping:
   ditortion: [-0.055537205189466476 , 0.06588292121887207 , -0.0013024559011682868  ,-0.0010083256056532264,  -0.02116576768457889]      # camera 畸变系数
 
 savepcd:
-  savePCDDirectory: "/fast_lio/src/livox_color/COLOR_PCD/"
+  savePCDDirectory: "/livox_color_ws/src/livox_color/PCD/"

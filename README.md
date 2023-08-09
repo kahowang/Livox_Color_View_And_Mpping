@@ -2,21 +2,22 @@
 
 A module to realtime color the livox frame and color for FASTLIO2 map, inorder to checkout our extrinsicT
 
-<p align='center'>
-    <img src="./pic/FASTLIO-COLOR.gif " alt="drawing" width="400" height ="250"/>
-    <img src="./pic/FASTLIO-COLOR2.gif" alt="drawing" width="400" height =250/>
-</p>
 
 <p align='center'>
     <img src="./pic/FASTLIO-COLOR3.gif " alt="drawing" width="500" height ="280"/>
 </p>
+<p align='center'>
+    <img src="./pic/mapping2.gif " alt="drawing" width="400" height ="300"/>
+    <img src="./pic/view2.gif" alt="drawing" width="400" height =300/>
+</p>
+
 ## Update Lists
 
 ```shell
 # Verson 2023.3
 	提交 livox_view   livox_mapping 模块，用于  快速验证camera-livox外参  &  基于FASTLIO2的上色
 # Verson 2023.8
-    1.修正 livox_mapping 模块  2. 幷提交livox_trigger 模块  3.内参修正
+    1.修正 livox_mapping 模块  2. 幷提交livox_trigger 模块  3.提供测试数据集
     具体更改： livox_mapping  & livox_trigger 模块增加了时间软同步，避免之前因为camera与lidar没有数据同步，有较大时间差距，导致无法上色的问题。	两模块的时间软同步区别在于，livox_mapping使用的是ros自带的时间对齐缓冲器，livox_trigger 使用的自己写的逻辑时间软同步器。
     // livox_mapping  ROS 自带缓冲器
     sync_.reset(new Sync(MySyncPolicy(100), path_sub_, points_sub_, image_sub_));			//  时间软同步最大容忍时间为100ms
@@ -34,9 +35,9 @@ A module to realtime color the livox frame and color for FASTLIO2 map, inorder t
 
 ## Our PlatForm
 
-| Lidar       | Camera | Computer    |
-| ----------- | ------ | ----------- |
-| Livox mid70 | D435i  | Intel NUC11 |
+| Lidar       | Camera | Computer    | IMU     |
+| ----------- | ------ | ----------- | ------- |
+| Livox mid70 | D435i  | Intel NUC11 | LPMSIG1 |
 
 <p align='center'>
     <img src="./pic/handle.gif " alt="drawing" width="450" height ="250"/>
@@ -72,11 +73,68 @@ cd ..
 catkin_make
 ```
 
-## Quick test
+## Quick test by dataset
+
+<p align='center'>
+    <img src="./pic/view1.gif " alt="drawing" width="400" height ="250"/>
+    <img src="./pic/mapping1.gif" alt="drawing" width="400" height =250/>
+</p>
+
+数据集由两部分组成，分别为 **Huck_SCAU_Mapping** 和 **Huck_SCAU_view**，由**SCAU**  [**Huke Wei**](https://gist.github.com/tangyubbb)同学提供，非常感谢~
+
+### 1.Dataset Download
+
+Huck_SCAU_view : 为静止测试单帧累积数据集，数据集下载地址 ：https://drive.google.com/file/d/1LY9TqONkWVVogt_S9epl6IqjNINgufAz/view?usp=sharing
+
+Huck_SCAU_Mapping：为建图实时上色数据集，本数据集移动范围较少，提供已进行FASTLIO2后获得的点云和里程计，数据集下载地址 ：https://drive.google.com/file/d/1GLYfwe1vizN5BxuS6xPymwlOwf8dYy9s/view?usp=sharing
+
+| Lidar       | Camera | Computer    | IMU         |
+| ----------- | ------ | ----------- | ----------- |
+| Livox mid40 | D455   | Intel NUC11 | D455内置IMU |
+
+### 2.Livox_Color_View
+
+```shell
+#运行color view launch文件
+roslaunch livox_color livox_color_view.launch
+#运行数据集 Huck_SCAU_view
+rosbag play  Huck_SCAU_view.bag
+```
+
+### 3.FastLio2_Color_Mapping  
+
+使用ros时间软同步器		
+
+```shell
+#step1 : 运行color mappping launch文件
+roslaunch livox_color livox_color_mapping.launch
+#step2 : 运行数据集 Huck_SCAU_view
+rosbag play  Huck_SCAU_Mapping.bag
+#step3 : 保存地图,地图文件会保存于对应的文件夹中
+rosservice call /save_map "{}"
+```
+
+### 4.FastLio2_Color_Mapping_Trigger  
+
+使用自写时间软同步器		
+
+```shell
+#step1 : 运行color mappping launch文件
+roslaunch livox_color livox_color_mapping_trigger.launch
+#step2 : 运行数据集 Huck_SCAU_view
+rosbag play  Huck_SCAU_Mapping.bag
+#step3 : 保存地图,地图文件会保存于对应的文件夹中
+rosservice call /save_map "{}"
+```
 
 
 
 ## Quick start
+
+<p align='center'>
+    <img src="./pic/FASTLIO-COLOR.gif " alt="drawing" width="400" height ="250"/>
+    <img src="./pic/FASTLIO-COLOR2.gif" alt="drawing" width="400" height =250/>
+</p>
 
 ### 1.Livox_Color_View
 
@@ -114,7 +172,7 @@ roslaunch livox_color livox_color_mapping.launch
 rosbag play *.bag
 
 #step4 保存地图,地图文件会保存于对应的文件夹中
-rosservice call /save_map destination: ''" 
+rosservice call /save_map "{}"
 ```
 
 ### 3.some config
@@ -148,12 +206,10 @@ define Hmax 720						#camera Height
 define Wmax 1280				 #camera width 
 ```
 
-<p align='center'>
-    <img src="./pic/FASTLIO-COLOR-PIC1.png " alt="drawing" width="400" height ="250"/>
-    <img src="./pic/FASTLIO-COLOR-PIC2.png" alt="drawing" width="400" height =250/>
-</p>
 ## Acknowledgements
 
  In this project, the baseline is from  [LIVOX_COLOR](https://github.com/luckyluckydadada/LIVOX_COLOR) .
 
- Also thanks [Tomato1107](https://github.com/Tomato1107)    [lovelyyoshino](https://github.com/lovelyyoshino)   [Huang Hongqian](https://github.com/Natsu-Akatsuki)   LeiHe 's great help .
+ Also thanks [Tomato1107](https://github.com/Tomato1107)    [lovelyyoshino](https://github.com/lovelyyoshino)   [Huang Hongqian](https://github.com/Natsu-Akatsuki)   [Huke Wei](https://gist.github.com/tangyubbb)  LeiHe 's great help .
+
+​																																																							edited by kaho 2023.8.9

@@ -272,8 +272,7 @@ bool saveMapService(livox_color::save_mapRequest& req, livox_color::save_mapResp
     
       cout << "****************************************************" << endl;
       cout << "Saving map to pcd files ..." << endl;
-      if(req.destination.empty()) saveMapDirectory = std::getenv("HOME") + savePCDDirectory;
-      else saveMapDirectory = std::getenv("HOME") + req.destination;
+      saveMapDirectory = std::getenv("HOME") + savePCDDirectory;
       cout << "Save destination: " << saveMapDirectory << endl;
 
       // 提取历史关键帧角点、平面点集合
@@ -285,10 +284,10 @@ bool saveMapService(livox_color::save_mapRequest& req, livox_color::save_mapResp
       }
 
       int ret = pcl::io::savePCDFileBinary(saveMapDirectory + "/GlobalMap.pcd", *globalMapCloud);       //  稠密地图
-      res.success = ret == 0;
 
       cout << "****************************************************" << endl;
       cout << "Saving map to pcd files completed\n" << endl;
+
 
       return true;
 }
